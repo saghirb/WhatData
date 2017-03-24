@@ -1,0 +1,55 @@
+---
+title: "Datasets Available in R"
+author: "Saghir Bashir"
+date: "`r Sys.Date()`"
+output: html_document
+---
+```{r}
+
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## What Data?
+
+There are many datasets avalable in R that can be used for teaching, presentations or to prepare reproducible example code for sharing (see `reprex` package). To see a list of the available datasets (including for the loaded packages) type `data()` in the R console. 
+
+This program creates a dataset that makes it easier to search for dataset to use based on the dataset descriptions and classes.
+
+## Dataset of R Datasets
+
+First load the packages for which we would like to include in our dataset of R datasets. 
+```{r echo=FALSE}
+library(tidyverse)
+library(tibble)
+library(stringr)
+library(DT)
+```
+
+Creating a `tibble` with the list of datasets and other useful information.
+```{r echo=FALSE}
+all_ds_ls <- data()
+
+all_ds <- all_ds_ls$results %>%
+          as_tibble() %>%
+          rename(Data_Orig = Item) %>%
+          mutate(dataset = word(Data_Orig, 1)) %>%
+          select(Package, Data_Orig, dataset, Title) %>%
+          mutate(Class = invoke_map(class, as.list(parse(text = dataset)))) %>%
+          unnest(Class)
+```
+
+## Making the dataset accessible
+
+```{r echo=FALSE}
+
+whatDat <- function(search=""){
+  
+}
+
+# Quick and lazy method ;o)
+datatable(all_ds)
+```
+
