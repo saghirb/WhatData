@@ -6,6 +6,7 @@ output:
   html_document:
     theme: cerulean
     highlight: default
+    code_folding: hide
 ---
 ```{r}
 
@@ -54,7 +55,7 @@ all_ds <- all_ds_ls$results %>%
 ## Find R Datasets
 
 Simply type in a key word, class or package name into the data table "*Search:*" box (see below)
-```{r echo=FALSE}
+```{r echo=TRUE}
 # Quick and lazy method ;o)
 DT::datatable(all_ds)
 ```
