@@ -18,6 +18,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Motivation & Objective
 
+> *Note:* To search for R datasets please download this github repository and open the *WhatData.html* file in your browser.
+
 Often my main objective is to find an R datasets of a particular class (e.g. `tbl_df`, `data.frame`, `ts`) which I would like to use for: 
 
 * teaching
