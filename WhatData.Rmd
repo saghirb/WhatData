@@ -39,7 +39,7 @@ library(stringr)
 library(DT)
 ```
 
-Creating a `tibble` (`all_ds`) with the list of datasets and other useful information. It is intentionally in _long_ format as it makes it easier to search by class. 
+Creating a `tibble` (`all_ds`) with the list of datasets and other useful information. It is intentionally in _long_ format as it makes it easier to search by class. You can use `dplyr::filter` to search `all_ds` or alternatively use the `DT::datatable` below.
 ```{r echo=TRUE}
 all_ds_ls <- data()
 
