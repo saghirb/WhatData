@@ -1,5 +1,7 @@
 ## Datasets Available in R
 
+> *Note:* To search for R datasets please download (or clone) this github repository and open the *WhatData.html* file in your browser.
+
 ### Motivation & Objective
 
 Often my main objective is to find an R datasets of a particular class (e.g. `tbl_df`, `data.frame`, `ts`) which I would like to use for: 
