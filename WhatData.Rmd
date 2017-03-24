@@ -2,7 +2,10 @@
 title: "Datasets Available in R"
 author: "Saghir Bashir"
 date: "`r Sys.Date()`"
-output: html_document
+output: 
+  html_document:
+    theme: cerulean
+    highlight: default
 ---
 ```{r}
 
@@ -12,44 +15,48 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## What Data?
+## Motivation & Objective
 
-There are many datasets avalable in R that can be used for teaching, presentations or to prepare reproducible example code for sharing (see `reprex` package). To see a list of the available datasets (including for the loaded packages) type `data()` in the R console. 
+Often my main objective is to find an R datasets of a particular class (e.g. `tbl_df`, `data.frame`, `ts`) which I would like to use for: 
 
-This program creates a dataset that makes it easier to search for dataset to use based on the dataset descriptions and classes.
+* teaching
+* presentations 
+* to prepare reproducible example code for sharing (see `reprex` package)
 
-## Dataset of R Datasets
+There *are* many useful datasets available in Base R and others that are loaded with packages. To see a list of those that are available to you (including for loaded packages) type `data()` in the R console. There are packages dedicated to sharing data (e.g. see `gapminder`, `FiveThirtyEight` packages) which are not covered in this document.
 
-First load the packages for which we would like to include in our dataset of R datasets. 
-```{r echo=FALSE}
+This program creates a `tibble` call `all_ds` that makes it easier to search for datasets based on the keywords and/or classes. 
+
+## A tibble of R Datasets
+
+Start by loading the required packages and those from which you would like to include datasets. 
+```{r echo=TRUE, message=FALSE}
 library(tidyverse)
 library(tibble)
 library(stringr)
 library(DT)
 ```
 
-Creating a `tibble` with the list of datasets and other useful information.
-```{r echo=FALSE}
+Creating a `tibble` (`all_ds`) with the list of datasets and other useful information. It is intentionally in _long_ format as it makes it easier to search by class. 
+```{r echo=TRUE}
 all_ds_ls <- data()
 
 all_ds <- all_ds_ls$results %>%
           as_tibble() %>%
           rename(Data_Orig = Item) %>%
           mutate(dataset = word(Data_Orig, 1)) %>%
-          select(Package, Data_Orig, dataset, Title) %>%
           mutate(Class = invoke_map(class, as.list(parse(text = dataset)))) %>%
-          unnest(Class)
+          unnest(Class) %>%
+          select(Package, Data_Orig, Title, Class) %>%
+          arrange(Package, Data_Orig, Class)
 ```
 
-## Making the dataset accessible
+## Find R Datasets
 
+Simply type in a key word, class or package name into the data table "*Search:*" box (see below)
 ```{r echo=FALSE}
-
-whatDat <- function(search=""){
-  
-}
-
 # Quick and lazy method ;o)
-datatable(all_ds)
+DT::datatable(all_ds)
 ```
 
+**Warning:** This document is intentionally in HTML format otherwise the (`DT::datatable`) search will not work.
