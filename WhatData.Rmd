@@ -36,6 +36,7 @@ Start by loading the required packages and those from which you would like to in
 library(tidyverse)
 library(tibble)
 library(stringr)
+library(MASS)
 library(DT)
 ```
 
@@ -44,13 +45,13 @@ Creating a `tibble` (`all_ds`) with the list of datasets and other useful inform
 all_ds_ls <- data()
 
 all_ds <- all_ds_ls$results %>%
-          as_tibble() %>%
-          rename(Data_Orig = Item) %>%
-          mutate(dataset = word(Data_Orig, 1)) %>%
-          mutate(Class = invoke_map(class, as.list(parse(text = dataset)))) %>%
-          unnest(Class) %>%
-          select(Package, Data_Orig, Title, Class) %>%
-          arrange(Package, Data_Orig, Class)
+          tibble::as_tibble() %>%
+          dplyr::rename(Data_Orig = Item) %>%
+          dplyr::mutate(dataset = stringr::word(Data_Orig, 1)) %>%
+          dplyr::mutate(Class = purrr::invoke_map(class, as.list(parse(text = dataset)))) %>%
+          tidyr::unnest(Class) %>%
+          dplyr::select(Package, Data_Orig, Title, Class) %>%
+          dplyr::arrange(Package, Data_Orig, Class)
 ```
 
 ## Find R Datasets
