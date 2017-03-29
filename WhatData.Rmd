@@ -40,7 +40,7 @@ library(MASS)
 library(DT)
 ```
 
-Creating a `tibble` (`all_ds`) with the list of datasets and other useful information. It is intentionally in _long_ format as it makes it easier to search by class. You can use `dplyr::filter` to search `all_ds` or alternatively use the `DT::datatable` below.
+Creating a `tibble` (`all_ds`) with the list of datasets and other useful information. You can use `dplyr::filter` to search `all_ds` or alternatively use the `DT::datatable` below.
 ```{r echo=TRUE}
 all_ds_ls <- data()
 
@@ -51,7 +51,10 @@ all_ds <- all_ds_ls$results %>%
           dplyr::mutate(Class = purrr::invoke_map(class, as.list(parse(text = dataset)))) %>%
           tidyr::unnest(Class) %>%
           dplyr::select(Package, Data_Orig, Title, Class) %>%
-          dplyr::arrange(Package, Data_Orig, Class)
+          dplyr::arrange(Package, Data_Orig, Class) %>%
+          dplyr::mutate(Val = Class) %>%
+          tidyr::spread(key = Class, value=Val, fill = "") %>%
+          tidyr::unite(Classes, c(-Package, -Data_Orig, -Title), sep= " ") 
 ```
 
 ## Find R Datasets
@@ -67,15 +70,22 @@ DT::datatable(all_ds)
 ### Using dplyr::filter 
 
 ```{r eval=FALSE}
+# Find all tibbles.
 all_ds %>% 
-  filter(str_detect(Class, "tbl_df"))
+  filter(str_detect(Classes, "tbl_df"))
 
+# Filtering out the rows with class "ts" and not things like "datasets".
+all_ds %>% 
+  filter(str_detect(Classes, regex("\\b(ts)\\b")))
+
+# Find datasets related with any form of "sleep" in dataset names or descriptions.
 all_ds %>% 
   filter(str_detect(Title, regex("sleep", ignore_case = TRUE)))
 
+# Time series data for econ(omic), stock or share data.
 all_ds %>% 
   filter(str_detect(Title, regex("econ|stock|share", ignore_case = TRUE)) &
-                  str_detect(Class, "ts"))
+                  str_detect(Classes, regex("\\b(ts)\\b")))
 ```
 
 **Warning:** This document is intentionally in HTML format otherwise the (`DT::datatable`) search will not work.
