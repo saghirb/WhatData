@@ -4,11 +4,11 @@
 
 ### Motivation & Objective
 
-Often my main objective is to find an R datasets of a particular class (e.g. `tbl_df`, `data.frame`, `ts`) which I would like to use for: 
+I often myself looking for R datasets of a particular class (e.g. `tbl_df`, `data.frame`, `ts`) for: 
 
 * teaching
 * presentations 
-* to prepare reproducible example code for sharing (see `reprex` package)
+* preparing reproducible example code (see [`reprex`](https://github.com/tidyverse/reprex) package)
 
 There *are* many useful datasets available in Base R and others that are loaded with packages. To see a list of those that are available to you (including for loaded packages) type `data()` in the R console. There are packages dedicated to sharing data (e.g. see `gapminder`, `FiveThirtyEight` packages) which are not covered in this document.
 
