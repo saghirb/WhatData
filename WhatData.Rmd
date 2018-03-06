@@ -22,20 +22,20 @@ library(DT)
 
 ## Motivation & Objective
 
-Often my main objective is to find an R datasets of a particular class (e.g. `tbl_df`, `data.frame`, `ts`) which I would like to use for: 
+There *are* many useful datasets available for you to use in Base R and the packages that 
+are installed on your system. Sometimes I need to find an R datasets of a particular class 
+(e.g. `tbl_df`, `data.frame`, `ts`) which I would like to use for: 
 
 * teaching
 * presentations 
 * to prepare reproducible example code for sharing (see `reprex` package)
 
-There *are* many useful datasets available in Base R and others that are loaded with packages. To see a list of those that are available to you (including for loaded packages) type `data()` in the R console. There are packages dedicated to sharing data (e.g. see `gapminder`, `FiveThirtyEight` packages) which are not covered in this document.
-
 This program creates a `tibble` call `all_ds` that makes it easier to search for datasets based on the keywords and/or classes. 
 
 ## A data.frame (tibble) of R Datasets
 
-Creating a `tibble` (`all_ds`) with the list of datasets and other useful information. You can use `dplyr::filter` to search `all_ds` or alternatively use the `DT::datatable` below.
-```{r echo=TRUE}
+Creating a dataset with the list of available datasets and other useful information. 
+```{r allData, echo=TRUE, message=FALSE, warning=FALSE}
 # Function to catch the error for data that is not exported (although it is
 # returned using the 'data()' function).
 unexportedData <- function (x) {
@@ -64,14 +64,15 @@ all_ds <- data(package = .packages(TRUE)) %>%
 ### Interactive Data Table
 
 Simply type in a key word, class or package name into the data table "*Search:*" box (see below)
-```{r echo=TRUE}
-# Quick and lazy method ;o)
-DT::datatable(all_ds)
+```{r dataDT, echo=TRUE}
+all_ds %>% 
+  select(-pkgData) %>% 
+  DT::datatable()
 ```
 
 ### Using dplyr::filter 
 
-```{r eval=FALSE}
+```{r how2Serach, eval=FALSE}
 # Find all tibbles.
 all_ds %>% 
   filter(str_detect(Classes, "tbl_df"))
