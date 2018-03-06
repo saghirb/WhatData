@@ -14,6 +14,9 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(stringr)
+library(DT)
 ```
 > *Note:* To search for R datasets please download (or clone) this github repository and open the *WhatData.html* file in your browser.
 
@@ -29,53 +32,31 @@ There *are* many useful datasets available in Base R and others that are loaded 
 
 This program creates a `tibble` call `all_ds` that makes it easier to search for datasets based on the keywords and/or classes. 
 
-## A tibble of R Datasets
-
-Start by loading the required packages and those from which you would like to include datasets. 
-```{r echo=TRUE, message=FALSE}
-library(tidyverse)
-library(tibble)
-library(stringr)
-library(MASS)
-library(DT)
-library(fivethirtyeight)
-library(gapminder)
-library(nycflights13)
-#library(Epi)
-library(stratification)
-library(lsmeans)
-library(SwissAir)
-library(eha)
-#library(MEMSS)
-#library(fda)
-library(bundesligR)
-library(boot)
-library(nlme)
-library(Ecdat)
-library(eurostat)
-library(europop)
-library(HistData)
-library(babynames)
-library(fueleconomy)
-library(nasaweather)
-#library(UScensus2010)
-```
+## A data.frame (tibble) of R Datasets
 
 Creating a `tibble` (`all_ds`) with the list of datasets and other useful information. You can use `dplyr::filter` to search `all_ds` or alternatively use the `DT::datatable` below.
 ```{r echo=TRUE}
-all_ds_ls <- data()
+# Function to catch the error for data that is not exported (although it is
+# returned using the 'data()' function).
+unexportedData <- function (x) {
+  out <- tryCatch(class(eval(parse(text = x))), error = function(e) "NOT EXPORTED")
+  return(out)
+}
 
-all_ds <- all_ds_ls$results %>%
-          tibble::as_tibble() %>%
-          dplyr::rename(Data_Orig = Item) %>%
-          dplyr::mutate(dataset = stringr::word(Data_Orig, 1)) %>%
-          dplyr::mutate(Class = purrr::invoke_map(class, as.list(parse(text = dataset)))) %>%
-          tidyr::unnest(Class) %>%
-          dplyr::select(Package, Data_Orig, Title, Class) %>%
-          dplyr::arrange(Package, Data_Orig, Class) %>%
-          dplyr::mutate(Val = Class) %>%
-          tidyr::spread(key = Class, value=Val, fill = "") %>%
-          tidyr::unite(Classes, c(-Package, -Data_Orig, -Title), sep= " ") 
+all_ds <- data(package = .packages(TRUE)) %>% 
+  .$results %>%
+  tibble::as_tibble() %>%
+  dplyr::mutate(DataOrig = stringr::word(Item, 1)) %>%
+  dplyr::mutate(pkgData = paste(Package, DataOrig, sep="::")) %>% 
+  dplyr::arrange(pkgData) %>% 
+  dplyr::mutate(Class = purrr::invoke_map(unexportedData, pkgData)) %>% 
+  tidyr::unnest(Class) %>% 
+  dplyr::filter(!str_detect(Class, "NOT EXPORTED")) %>% 
+  dplyr::select(pkgData, Package, DataOrig, Title, Class) %>%
+  dplyr::arrange(pkgData, Class) %>%
+  dplyr::mutate(Val = Class) %>%
+  tidyr::spread(key = Class, value=Val, fill = "") %>%
+  tidyr::unite(Classes, c(-pkgData, -Package, -DataOrig, -Title), sep= " ")
 ```
 
 ## Find R Datasets
