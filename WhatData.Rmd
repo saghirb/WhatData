@@ -11,21 +11,24 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(tidyverse)
-library(stringr)
-library(DT)
 ```
 
 Do you need to find an R dataset that you can use for teaching, presentations or 
 [`reprex`](https://github.com/tidyverse/reprex)? [WhatData](https://github.com/saghirb/WhatData) 
 is there to help you. You can try it out [here](http://ilustat.com/shared/what_data_r).
 
-## A data.frame (tibble) of R Datasets
+## A Dataset of R Datasets
 
-Creating a dataset with the list of available datasets and other useful information. 
+We start by creating a dataset of the available datasets in R on your system (i.e. from both base 
+R and from the packages installed on your system). The following code creates a tidy dataset 
+(`all_ds`) with package name, dataset name, title and the object class.
+
 ```{r allData, echo=TRUE, message=FALSE, warning=FALSE}
-# Function to catch the error for data that is not exported (although it is
-# returned using the 'data()' function).
+library(tidyverse)
+library(stringr)
+library(DT)
+
+# Function to catch the error for data that is not exported.
 unexportedData <- function (x) {
   out <- tryCatch(class(eval(parse(text = x))), error = function(e) "NOT EXPORTED")
   return(out)
@@ -47,11 +50,21 @@ all_ds <- data(package = .packages(all.available = TRUE)) %>%
   tidyr::unite(Classes, c(-pkgData, -Package, -DataOrig, -Title), sep= " ")
 ```
 
+Some key points for the code above:
+
+* `data(package = .packages(all.available = TRUE))` identifies all the data objects in all the
+packages installed on your system including the those that are not exported.
+* Function `unexportedData()` catches the errors from using `class()` and labels them as "NOT EXPORTED" 
+(although the errors could be due to other reasons but we ignore the reason).
+* Observations are dropped when `Class` is "NOT EXPORTED".
+* The remaining code is to create a tidy dataset.
+
 ## Find R Datasets
 
 ### Interactive Data Table
 
-Use the "*Search:*" boxes to find the data that you want.
+`DT::datatable()` can be used to search for datasets and searches can be refined by including a 
+search box on top of each column (using the option `filter = "top"`).
 ```{r dataDT, echo=TRUE}
 all_ds %>% 
   select(-pkgData) %>% 
@@ -60,9 +73,9 @@ all_ds %>%
 
 ### Using dplyr::filter()
 
-Use the `dplyr::filter()` function to find the data that you want.
-
-```{r how2Serach, eval=FALSE}
+`dplyr::filter()` can also be used to search for datasets. Searches can 
+be refined using regular expressions (`regex`).
+```{r how2Search, eval=FALSE}
 # Find all tibbles.
 all_ds %>% 
   filter(str_detect(Classes, "tbl_df"))
@@ -80,3 +93,8 @@ all_ds %>%
   filter(str_detect(Title, regex("econ|stock|share", ignore_case = TRUE)) &
                   str_detect(Classes, regex("\\b(ts)\\b")))
 ```
+
+## Summary
+
+We have presented one approach to finding R datasets that you can use for teaching, presentations or 
+reprex. It is a useful way to discover (or be reminded about) datasets in R.
