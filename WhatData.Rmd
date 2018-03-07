@@ -44,7 +44,7 @@ unexportedData <- function (x) {
   return(out)
 }
 
-all_ds <- data(package = .packages(TRUE)) %>% 
+all_ds <- data(package = .packages(all.available = TRUE)) %>% 
   .$results %>%
   tibble::as_tibble() %>%
   dplyr::mutate(DataOrig = stringr::word(Item, 1)) %>%
@@ -68,7 +68,7 @@ Simply type in a key word, class or package name into the data table "*Search:*"
 ```{r dataDT, echo=TRUE}
 all_ds %>% 
   select(-pkgData) %>% 
-  DT::datatable()
+  DT::datatable(filter = "top")
 ```
 
 ### Using dplyr::filter 
