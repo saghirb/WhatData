@@ -13,5 +13,5 @@ your system. Sometimes you might need to find an R datasets of a particular clas
 * preparing reproducible example code (see [`reprex`](https://github.com/tidyverse/reprex) 
 package).
 
-This program creates a `tibble` call `all_ds` that makes it easier to search for datasets 
-based on the keywords and/or classes. 
+Based on the packages that are installed [WhatData](https://github.com/saghirb/WhatData) creates 
+a `data.frame` (called `all_ds`) of datasets which can be searched using keywords and/or classes. 
