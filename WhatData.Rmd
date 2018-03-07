@@ -1,5 +1,5 @@
 ---
-title: "Datasets Available in R"
+title: "Finding Datasets in R"
 author: "Saghir Bashir"
 date: "`r Sys.Date()`"
 output: 
@@ -8,9 +8,6 @@ output:
     highlight: default
     code_folding: show
 ---
-```{r}
-
-```
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -18,20 +15,10 @@ library(tidyverse)
 library(stringr)
 library(DT)
 ```
-> *Note:* To search for R datasets please download (or clone) this github repository and open the *WhatData.html* file in your browser.
 
-## Motivation & Objective
-
-There *are* many useful datasets available in Base R and the packages that are installed on 
-your system. Sometimes you might need to find an R datasets of a particular class  (e.g.
-`tbl_df`, `data.frame`, `ts`) that you can use for: 
-
-* teaching,
-* a presentation or
-* to prepare reproducible example code for sharing (see `reprex` package).
-
-Based on the packages that are installed [WhatData](https://github.com/saghirb/WhatData) creates 
-a `data.frame` (called `all_ds`) of datasets which can be searched using keywords and/or classes. 
+Do you need to find an R dataset that you can use for teaching, presentations or 
+[`reprex`](https://github.com/tidyverse/reprex)? [WhatData](https://github.com/saghirb/WhatData) 
+is there to help you. You can try it out [here](http://ilustat.com/shared/what_data_r).
 
 ## A data.frame (tibble) of R Datasets
 
@@ -64,14 +51,16 @@ all_ds <- data(package = .packages(all.available = TRUE)) %>%
 
 ### Interactive Data Table
 
-Simply type in a key word, class or package name into the data table "*Search:*" box (see below)
+Use the "*Search:*" boxes to find the data that you want.
 ```{r dataDT, echo=TRUE}
 all_ds %>% 
   select(-pkgData) %>% 
   DT::datatable(filter = "top")
 ```
 
-### Using dplyr::filter 
+### Using dplyr::filter()
+
+Use the `dplyr::filter()` function to find the data that you want.
 
 ```{r how2Serach, eval=FALSE}
 # Find all tibbles.
@@ -91,5 +80,3 @@ all_ds %>%
   filter(str_detect(Title, regex("econ|stock|share", ignore_case = TRUE)) &
                   str_detect(Classes, regex("\\b(ts)\\b")))
 ```
-
-**Note:** This document is intentionally in HTML format otherwise the (`DT::datatable`) search will not work.
