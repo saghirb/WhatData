@@ -7,6 +7,9 @@ output:
     theme: cerulean
     highlight: default
     code_folding: show
+    toc: TRUE
+    toc_float: TRUE
+    toc_depth: 2    
 ---
 
 ```{r setup, include=FALSE}
